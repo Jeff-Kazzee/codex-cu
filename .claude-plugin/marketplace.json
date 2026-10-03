@@ -1,0 +1,23 @@
+{
+  "name": "codex-cu-marketplace",
+  "owner": {
+    "name": "Jeff Kazzee",
+    "url": "https://github.com/Jeff-Kazzee"
+  },
+  "metadata": {
+    "description": "Codex desktop computer-use integration for Claude Code.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "codex-cu",
+      "source": ".",
+      "description": "Windows app and browser control through your installed Codex desktop runtime.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Jeff Kazzee",
+        "url": "https://github.com/Jeff-Kazzee"
+      }
+    }
+  ]
+}

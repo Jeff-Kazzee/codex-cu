@@ -1,0 +1,6 @@
+node_modules/
+.env
+.env.*
+.codex-cu-managed.json
+*.codex-cu-backup-*
+*.codex-cu-tmp-*

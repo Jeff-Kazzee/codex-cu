@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "codex-cu": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/codex-cu.mjs", "--windows"]
+    },
+    "codex-browser": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/codex-cu.mjs", "--browser"]
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "codex-cu",
+  "version": "0.1.0",
+  "description": "Windows app and browser control through your installed Codex desktop runtime, with reusable computer-use skills.",
+  "author": {
+    "name": "Jeff Kazzee",
+    "url": "https://github.com/Jeff-Kazzee"
+  },
+  "homepage": "https://github.com/Jeff-Kazzee/codex-cu",
+  "repository": "https://github.com/Jeff-Kazzee/codex-cu",
+  "license": "MIT",
+  "keywords": ["windows", "computer-use", "browser-use", "mcp", "cline", "codex"],
+  "documentationUrl": "https://github.com/Jeff-Kazzee/codex-cu/blob/main/README.md",
+  "supportUrl": "https://github.com/Jeff-Kazzee/codex-cu/issues",
+  "privacyPolicyUrl": "https://github.com/Jeff-Kazzee/codex-cu/blob/main/PRIVACY.md"
+}
