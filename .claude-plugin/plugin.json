@@ -1,6 +1,6 @@
 {
   "name": "codex-cu",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Windows app and browser control through your installed Codex desktop runtime, with reusable computer-use skills.",
   "author": {
     "name": "Jeff Kazzee",

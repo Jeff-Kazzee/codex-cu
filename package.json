@@ -1,6 +1,6 @@
 {
   "name": "codex-cu-plugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "description": "Public Claude Code plugin and reusable skills for an installed Codex desktop computer-use runtime.",

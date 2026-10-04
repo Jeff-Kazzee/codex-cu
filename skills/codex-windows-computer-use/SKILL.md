@@ -32,19 +32,37 @@ If the app has no window, `sky.launch_app({ app })` accepts a returned app ID or
 3. Perform that input in a separate call and refresh the state immediately.
 4. Verify the visible result before continuing.
 
-For accessibility indexes, observe with `include_text: true`. For coordinates, capture a screenshot and use its returned `screenshotId`. Prefer an observed semantic element when it identifies the intended control.
+When foreground control is authorized, activate the uniquely selected window before the first image capture. Some occluded windows produce images of an overlapping app. Window metadata cannot establish image content. Capture an image with text and inspect the actual app. Some windows return no accessibility text. For accessibility indexes, use `include_text: true`. For coordinates, inspect a screenshot and use its returned `screenshotId`. Prefer an observed semantic element when it identifies the intended control.
 
 ```javascript
+await sky.activate_window({ window: targetWindow });
 globalThis.state = await sky.get_window_state({
   window: targetWindow,
-  include_screenshot: false,
+  include_screenshot: true,
   include_text: true,
 });
 globalThis.targetWindow = state.window;
 nodeRepl.write(state.accessibility?.tree ?? 'No accessibility tree returned');
 ```
 
+This example requires foreground control. For a background-only request, omit activation and image capture; use accessibility text when available and report any observation limitation.
+
 Inspect this result before calling an input method. An action, layout change, interruption, or failed refresh invalidates its indexes and coordinates. Never retry an uncertain input without observing again.
+
+Check that the image shows the selected app. Window metadata alone does not prove that an occluded capture contains that app. If the image shows another app, stop input. When foreground control is authorized, bring the uniquely selected returned window forward and capture again:
+
+```javascript
+await sky.activate_window({ window: targetWindow });
+globalThis.state = await sky.get_window_state({
+  window: targetWindow,
+  include_screenshot: true,
+  include_text: true,
+});
+globalThis.targetWindow = state.window;
+nodeRepl.write(state.accessibility?.tree ?? 'Inspect the refreshed screenshot');
+```
+
+Inspect the refreshed image before choosing any input. If the user requires background-only control, report the capture limitation instead of activating the window.
 
 Screenshots from `get_window_state` appear as native images. Inspect them directly. Do not print, decode, save, or re-emit their payloads merely to view them.
 

@@ -68,4 +68,6 @@ Filter discovery by the intended app and observed title. If multiple windows rem
 
 For document entry, a foreground process or window title does not establish editor focus. Click the editable document area, refresh, inspect focus, then type in a separate call. Do not embed Enter, Tab, or other control keys in typed text.
 
+Before input, verify that the image contains the intended app. A matching window ID and title cannot establish image content. If another app covers the target and foreground control is authorized, call `activate_window` on the selected returned window, refresh, and inspect the image before continuing. Preserve a background-only requirement by reporting the limitation instead.
+
 If input reports that another window covers the target, activate the returned target and capture fresh screenshot state. Retry the intended input once against that refreshed state. If a dialog owns a separate window, select that returned dialog window through discovery.
