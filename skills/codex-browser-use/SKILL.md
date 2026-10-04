@@ -13,15 +13,15 @@ On the first `js` invocation, or after a reset, execute exactly one entrypoint c
 
 Choose the first matching case:
 
-| User context | First call |
-| --- | --- |
-| An explicitly mentioned tab | `globalThis.tab = await cua.getTab({ mention: "plugin://..." });` |
-| An existing tab's URL and a specified browser | `globalThis.tab = await cua.getTab({ url: "https://example.com" }, { browser: "chrome" });` |
-| A known tab ID and browser | `globalThis.tab = await cua.getTab("returned-tab-id", { browser: "chrome" });` |
-| A requested new in-app browser tab | `globalThis.tab = await cua.createBrowserTab("iab", "https://example.com", { visible: true });` |
-| A requested new Chrome or Edge tab | `globalThis.tab = await cua.createBrowserTab("chrome", "https://example.com", { sessionName: "🔎 Task" });` |
-| A target URL, with no named browser | `globalThis.browser = await cua.getBrowser({ url: "https://example.com" });` |
-| An inventory is needed | `await cua.getState();` |
+| User context                                  | First call                                                                                           |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| An explicitly mentioned tab                   | `let tab = await cua.getTab({ mention: "plugin://..." });`                                           |
+| An existing tab's URL and a specified browser | `let tab = await cua.getTab({ url: "https://example.com" }, { browser: "chrome" });`                 |
+| A known tab ID and browser                    | `let tab = await cua.getTab("returned-tab-id", { browser: "chrome" });`                              |
+| A requested new in-app browser tab            | `let tab = await cua.createBrowserTab("iab", "https://example.com", { visible: true });`             |
+| A requested new Chrome or Edge tab            | `let tab = await cua.createBrowserTab("chrome", "https://example.com", { sessionName: "🔎 Task" });` |
+| A target URL, with no named browser           | `let browser = await cua.getBrowser({ url: "https://example.com" });`                                |
+| An inventory is needed                        | `await cua.getState();`                                                                              |
 
 Replace example URLs and IDs with the task's known values. Pass a complete tab mention URL unchanged. A named browser is a user constraint. Do not switch browsers because a URL might choose another one.
 
@@ -31,7 +31,7 @@ Replace example URLs and IDs with the task's known values. Pass a complete tab m
 
 After selection, inspect the initial UI state and read all returned documentation. Use only methods and argument shapes that the MCP tool instructions or returned documentation describe. Do not guess methods from Playwright, Selenium, an earlier browser skill, or another runtime version.
 
-Reuse the selected browser and tab bindings. When a tab closes or becomes stale, reacquire it through a documented selector. A new user turn does not itself require resetting the browser session.
+Reuse the selected browser and tab bindings. Initial bindings are not created automatically; assign the returned handle explicitly. Keep bindings in the REPL's top-level lexical scope, and follow any returned restrictions on JavaScript globals. When a tab closes or becomes stale, reacquire it through a documented selector. A new user turn does not itself require resetting the browser session.
 
 Observe the current page before input. Prefer the returned semantic controls or locators. Take one state-changing action, inspect the resulting state, and verify progress. Reobserve when navigation, layout, focus, or a modal changes. Never reuse stale element references or screenshot coordinates.
 
