@@ -9,17 +9,20 @@ After inspecting an accessibility observation, replace the example index with th
 ```javascript
 {
   const observed = globalThis.state;
-  if (!observed?.accessibility) throw new Error("Observe the window before acting");
+  if (!observed?.accessibility)
+    throw new Error('Observe the window before acting');
   const elementIndex = 12;
   globalThis.state = null;
   await sky.click({ window: observed.window, element_index: elementIndex });
   globalThis.state = await sky.get_window_state({
     window: observed.window,
     include_screenshot: true,
-    include_text: true
+    include_text: true,
   });
   globalThis.targetWindow = state.window;
-  nodeRepl.write(state.accessibility?.tree ?? "Inspect the refreshed screenshot");
+  nodeRepl.write(
+    state.accessibility?.tree ?? 'Inspect the refreshed screenshot',
+  );
 }
 ```
 
@@ -32,7 +35,7 @@ await sky.click({
   window: state.window,
   screenshotId: state.screenshots[0].id,
   x: 420,
-  y: 260
+  y: 260,
 });
 ```
 
@@ -42,16 +45,16 @@ The numbers above illustrate the call shape. Choose actual coordinates from the 
 
 Every method targets a returned `window` object. These argument shapes identify the supported controls:
 
-| Method | Arguments in addition to `window` |
-| --- | --- |
-| `click` | `element_index`, or `x`, `y`, and a fresh `screenshotId`. Optional `mouse_button` and `click_count`. |
-| `type_text` | `text`, sent literally to the current focus. |
-| `press_key` | `key`, such as `Return`, `Tab`, or `Control_L+s`. |
-| `set_value` | `element_index` and `value` for an observed editable element. |
-| `scroll` | `x`, `y`, `scrollX`, and `scrollY`. Optional fresh `screenshotId`. |
-| `drag` | `from_x`, `from_y`, `to_x`, and `to_y`. Optional fresh `screenshotId`. |
-| `perform_secondary_action` | `element_index` and an `action` label returned by the observation. |
-| `activate_window` | No additional arguments. Refresh after activation. |
+| Method                     | Arguments in addition to `window`                                                                    |
+| -------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `click`                    | `element_index`, or `x`, `y`, and a fresh `screenshotId`. Optional `mouse_button` and `click_count`. |
+| `type_text`                | `text`, sent literally to the current focus.                                                         |
+| `press_key`                | `key`, such as `Return`, `Tab`, or `Control_L+s`.                                                    |
+| `set_value`                | `element_index` and `value` for an observed editable element.                                        |
+| `scroll`                   | `x`, `y`, `scrollX`, and `scrollY`. Optional fresh `screenshotId`.                                   |
+| `drag`                     | `from_x`, `from_y`, `to_x`, and `to_y`. Optional fresh `screenshotId`.                               |
+| `perform_secondary_action` | `element_index` and an `action` label returned by the observation.                                   |
+| `activate_window`          | No additional arguments. Refresh after activation.                                                   |
 
 Positive `scrollY` scrolls down. Negative values scroll up. Scroll inside the intended pane using observed coordinates. `scroll` does not take `element_index`.
 

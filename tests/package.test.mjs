@@ -13,8 +13,12 @@ async function filesIn(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     if (entry.name === 'node_modules' || entry.name === '.git') continue;
     const filename = path.join(directory, entry.name);
-    assert.equal(entry.isSymbolicLink(), false, `Export must contain files: ${entry.name}`);
-    if (entry.isDirectory()) result.push(...await filesIn(filename));
+    assert.equal(
+      entry.isSymbolicLink(),
+      false,
+      `Export must contain files: ${entry.name}`,
+    );
+    if (entry.isDirectory()) result.push(...(await filesIn(filename)));
     else result.push(filename);
   }
   return result;
@@ -37,8 +41,14 @@ test('marketplace resolves the plugin inside the standalone export', async () =>
 
 test('MCP modes share an included launcher without baked runtime configuration', async () => {
   const { mcpServers } = await readJson('.mcp.json');
-  assert.deepEqual(Object.keys(mcpServers).sort(), ['codex-browser', 'codex-cu']);
-  for (const [name, mode] of [['codex-cu', '--windows'], ['codex-browser', '--browser']]) {
+  assert.deepEqual(Object.keys(mcpServers).sort(), [
+    'codex-browser',
+    'codex-cu',
+  ]);
+  for (const [name, mode] of [
+    ['codex-cu', '--windows'],
+    ['codex-browser', '--browser'],
+  ]) {
     const server = mcpServers[name];
     assert.deepEqual(server, {
       command: 'node',
@@ -60,21 +70,46 @@ test('skills have discoverable frontmatter and contained, existing references', 
       if (/^https?:/.test(target) || target.startsWith('#')) continue;
       const resolved = path.resolve(path.dirname(filename), target);
       const relative = path.relative(root, resolved);
-      assert.ok(relative && !relative.startsWith('..') && !path.isAbsolute(relative));
-      assert.ok((await lstat(resolved)).isFile(), `Missing reference: ${target}`);
+      assert.ok(
+        relative && !relative.startsWith('..') && !path.isAbsolute(relative),
+      );
+      assert.ok(
+        (await lstat(resolved)).isFile(),
+        `Missing reference: ${target}`,
+      );
     }
   }
 });
 
 test('export excludes binaries, session captures, local paths, and literal credentials', async () => {
-  const forbiddenNames = /(?:\.exe|\.dll|\.node|\.jsonl|\.log|\.png|\.jpe?g|\.webp)$/i;
+  const forbiddenNames =
+    /(?:\.exe|\.dll|\.node|\.jsonl|\.log|\.png|\.jpe?g|\.webp)$/i;
   const privatePath = /C:[\\/]+Users[\\/]+(?!USERNAME(?:[\\/]|$))[^\s"'`]+/i;
   const privatePipe = /\\\\\.\\pipe\\[A-Za-z0-9_-]+/;
-  const credential = /(?:sk-(?:proj-)?[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)/;
+  const credential =
+    /(?:sk-(?:proj-)?[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)/;
   for (const filename of await filesIn(root)) {
     const relative = path.relative(root, filename);
-    assert.ok(!forbiddenNames.test(relative), `Unexpected private or binary artifact: ${relative}`);
-    assert.ok(!/^\.env(?:\.|$)/.test(path.basename(filename)), `Environment capture: ${relative}`);
+    if (relative.replaceAll('\\', '/') === '.claude-plugin/icon.png') {
+      const bytes = await readFile(filename);
+      assert.ok(bytes.length < 2 * 1024 * 1024, 'Listing icon exceeds 2 MB');
+      assert.deepEqual(
+        bytes.subarray(0, 8),
+        Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
+      );
+      assert.equal(bytes.subarray(12, 16).toString('ascii'), 'IHDR');
+      assert.equal(bytes.readUInt32BE(16), 1024);
+      assert.equal(bytes.readUInt32BE(20), 1024);
+      continue;
+    }
+    assert.ok(
+      !forbiddenNames.test(relative),
+      `Unexpected private or binary artifact: ${relative}`,
+    );
+    assert.ok(
+      !/^\.env(?:\.|$)/.test(path.basename(filename)),
+      `Environment capture: ${relative}`,
+    );
     const content = await readFile(filename, 'utf8');
     assert.ok(!privatePath.test(content), `User-specific path: ${relative}`);
     assert.ok(!privatePipe.test(content), `Session endpoint: ${relative}`);

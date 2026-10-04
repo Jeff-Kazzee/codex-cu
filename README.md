@@ -1,5 +1,7 @@
 # Codex computer use
 
+<img src=".claude-plugin/icon.png" width="96" height="96" alt="A window and pointer, the codex-cu plugin icon">
+
 `codex-cu` connects an MCP client to the computer-use runtime installed by the Codex Windows desktop app. The package contains a Claude Code plugin, two reusable skills, and a launcher with separate Windows and browser modes. Cline Desktop, Cline CLI, and Codex can use the same launcher through MCP registration.
 
 This is an independent project maintained by [Jeff Kazzee](https://github.com/Jeff-Kazzee). It is not an official OpenAI or Anthropic plugin.
@@ -27,7 +29,7 @@ node scripts/install-agents.mjs --install
 
 Use `--install --clients claude,cline` to select clients. The installer first verifies the Windows native binding. It copies this package into `~/.agents/plugins/codex-cu`, installs shared skills, and registers the two servers. Codex and Claude also receive skill copies in their own discovery directories. Cline reads the shared skills.
 
-The installer preserves other server entries and client settings. It resets automatic tool approvals on its two Cline entries because replacing a server can change its capabilities. It backs up changed configurations beside their originals. It refuses conflicting unmanaged package or skill files. On Windows, backup privacy follows the parent directory's access controls.
+The installer preserves other server entries and client settings. Matching, enabled Codex registrations are left in place when skills are refreshed. It resets automatic tool approvals on its two Cline entries because replacing a server can change its capabilities. It backs up changed configurations beside their originals. It refuses conflicting unmanaged package or skill files. On Windows, backup privacy follows the parent directory's access controls.
 
 Registration uses the official installed Codex executable. The installer never copies its runtime environment into client configuration. Check mode prints registration and configuration-match booleans without configuration values.
 

@@ -1,11 +1,13 @@
 {
   "name": "codex-cu-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "Public Claude Code plugin and reusable skills for an installed Codex desktop computer-use runtime.",
   "license": "MIT",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "node --test tests/package.test.mjs tests/installer.test.mjs"
   }

@@ -13,7 +13,7 @@ Run this once per fresh session:
 
 ```javascript
 if (!globalThis.sky) {
-  globalThis.sky = (await import("@oai/sky")).sky;
+  globalThis.sky = (await import('@oai/sky')).sky;
 }
 globalThis.apps = await sky.list_apps();
 nodeRepl.write(JSON.stringify(apps, null, 2));
@@ -36,10 +36,10 @@ For accessibility indexes, observe with `include_text: true`. For coordinates, c
 globalThis.state = await sky.get_window_state({
   window: targetWindow,
   include_screenshot: false,
-  include_text: true
+  include_text: true,
 });
 globalThis.targetWindow = state.window;
-nodeRepl.write(state.accessibility?.tree ?? "No accessibility tree returned");
+nodeRepl.write(state.accessibility?.tree ?? 'No accessibility tree returned');
 ```
 
 Inspect this result before calling an input method. An action, layout change, interruption, or failed refresh invalidates its indexes and coordinates. Never retry an uncertain input without observing again.
