@@ -12,6 +12,7 @@ This is an independent project maintained by [Jeff Kazzee](https://github.com/Je
 - An existing authorized native `node_repl` binding in the same Windows user and desktop session.
 - The app's installed `unified-computer-use` bundle.
 - Node.js 20 or later, available as `node` to your MCP client.
+- An MCP client that supports form elicitation for runtime requests before input.
 - Browser support enabled in the Codex app for the browser you want to control.
 
 The launcher discovers the newest compatible installed manifest at startup. It uses the app's existing executables and session configuration. You do not need to copy tokens, runtime paths, or connection endpoints into this package.
@@ -117,5 +118,7 @@ An unavailable binding, missing bundle, locked desktop, or unsupported browser r
 Run `npm test` in this directory for package checks. Run `claude plugin validate --strict --json .` for Claude's manifest validation. Test both modes through your actual MCP client to verify session compatibility.
 
 Read [the privacy notice](PRIVACY.md) before exposing app or browser content to an agent. Report redacted errors through [GitHub issues](https://github.com/Jeff-Kazzee/codex-cu/issues).
+
+App and browser observations can contain personal information. Your MCP client can send observations to its selected model provider and retain them in conversation history. Requested UI actions can write data into local apps or submit it to the websites you choose. The installer also creates local backups of changed client configuration. This project runs no hosted data service and does not retain data on a developer server; the client's, runtime's, and selected services' policies apply.
 
 The MIT license covers the original wrapper, skills, and documentation. OpenAI runtime packages, applications, and binaries are separate dependencies with their own terms. This repository does not redistribute them.

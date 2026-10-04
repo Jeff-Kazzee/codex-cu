@@ -10,4 +10,6 @@ The launcher reads local runtime configuration to find the installed executable 
 
 Windows input brings the selected window to the foreground. Browser sessions may already be signed in. Review the selected target and task before granting your MCP client permission to use either server.
 
+Requested UI actions can write data into local apps or transmit it to the websites you select. The installer creates local backups of changed client configuration; these can contain personal settings or credentials already present in that configuration. Keep those backups private. The project has no developer-hosted service that receives or retains your data.
+
 For questions, use [GitHub issues](https://github.com/Jeff-Kazzee/codex-cu/issues). Include the client version, operating system, and redacted error text.
