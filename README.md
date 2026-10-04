@@ -12,7 +12,7 @@ This is an independent project maintained by [Jeff Kazzee](https://github.com/Je
 - An existing authorized native `node_repl` binding in the same Windows user and desktop session.
 - The app's installed `unified-computer-use` bundle.
 - Node.js 20 or later, available as `node` to your MCP client.
-- An MCP client that supports form elicitation for runtime requests before input.
+- An MCP client that supports form elicitation for Windows app consent before input.
 - Browser support enabled in the Codex app for the browser you want to control.
 
 The launcher discovers the newest compatible installed manifest at startup. It uses the app's existing executables and session configuration. You do not need to copy tokens, runtime paths, or connection endpoints into this package.
@@ -87,6 +87,8 @@ Replace `C:/tools/codex-cu` with your actual checkout path. Preserve your existi
 
 If your Desktop version has a separate MCP configuration editor, merge these entries there through **Installed MCP**. Cline can also read global skills from `~/.cline/skills/`. Avoid installing duplicate copies of the same skill.
 
+The tested Cline CLI 3.0.65 uses a client without form elicitation. Registration and observation work, but it cannot answer the desktop runtime's consent request for Windows app launch or input. The [shared Cline SDK client](https://github.com/cline/cline/blob/main/sdk/packages/core/src/extensions/mcp/client.ts) also initializes with empty capabilities. Use a client with form support for Windows input; [Claude Code supports these forms](https://code.claude.com/docs/en/mcp#respond-to-mcp-elicitation-requests). Browser input and a model turn in Cline Desktop have not been verified. See [the compatibility receipt](COMPATIBILITY.md) for the tested versions and evidence.
+
 ## Register in Codex
 
 From a stable checkout, register both modes:
@@ -101,6 +103,12 @@ Copy the two skill folders into `~/.codex/skills/`, or put them in your project'
 ## Try an observation
 
 Ask your agent to use `codex-windows-computer-use` to list open app windows and inspect a selected window. For browsers, ask it to use `codex-browser-use` to inspect an existing tab. The skills guide initialization and require the agent to read runtime documentation before interaction.
+
+Example prompts:
+
+- “Use codex-windows-computer-use to list open app windows and inspect Calculator. Report its visible display.”
+- “Use codex-windows-computer-use to clear Calculator, enter 12 × 12, press equals, and report the result after inspecting the display.”
+- “Use codex-browser-use to open the project's public GitHub README in a new tab and summarize the installation requirements. Verify the page before answering.”
 
 Windows screenshots can capture an occluded window, but input activates the target window. This package does not provide background typing. Browser access depends on the app's connected browser sessions.
 

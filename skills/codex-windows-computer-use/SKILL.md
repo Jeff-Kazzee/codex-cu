@@ -7,6 +7,8 @@ description: Inspect and operate visible Windows app windows through the codex-c
 
 Use the `js` tool from the `codex-cu` MCP server. It provides a persistent JavaScript session connected to the installed Codex desktop runtime. Use only its documented `@oai/sky` API for Windows interaction. Read [Windows interaction reference](references/windows-interaction.md) before the first action.
 
+Windows app launch and input can require an MCP form response from the client. If the runtime reports that form elicitation is unavailable, observation can still work, but that client cannot complete the consent step. Report the limitation. Do not substitute an automatic approval, disable a permission check, or simulate a successful action.
+
 ## Initialize and select
 
 Run this once per fresh session:

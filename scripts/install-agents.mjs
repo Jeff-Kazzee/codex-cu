@@ -22,6 +22,7 @@ const packageFiles = [
   'package.json',
   'README.md',
   'PRIVACY.md',
+  'COMPATIBILITY.md',
   'LICENSE',
   'scripts/codex-cu.mjs',
   'scripts/install-agents.mjs',
