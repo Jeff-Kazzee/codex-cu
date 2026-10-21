@@ -3,6 +3,10 @@ import { readFile, readdir, realpath, stat } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { assertNodeVersion } from './check-node-version.mjs';
+import { requireVerifiedVendorMode, verifyChildNode } from './check-child-node.mjs';
+
+assertNodeVersion();
 
 const numericVersion = /^\d+(?:\.\d+)*$/;
 const secretName = /(?:^|_)(?:KEY|TOKEN|SECRET)$/i;
@@ -130,6 +134,7 @@ async function readLaunch(versionPath, mode) {
 }
 
 export async function queryCodexBinding({ command, env, timeoutMs = 10000 }) {
+  requireVerifiedVendorMode('windows');
   const executable = await requireFile(command, 'Bundled Codex CLI');
   if (path.basename(executable).toLowerCase() !== 'codex.exe') {
     throw new Error('Bundled Codex CLI must be the Windows executable');
@@ -295,6 +300,7 @@ export async function discoverLaunch({
 } = {}) {
   if (mode !== 'windows' && mode !== 'browser')
     throw new Error('Unknown computer-use mode');
+  requireVerifiedVendorMode(mode);
   if (mode === 'windows' && platform !== 'win32')
     throw new Error(
       'Windows mode requires Windows; use --browser on this platform',
@@ -313,6 +319,7 @@ export async function discoverLaunch({
   for (const version of versions) {
     try {
       let launch = await readLaunch(path.join(cacheRoot, version), mode);
+      launch.command = await verifyChildNode(launch.command);
       if (mode === 'windows') {
         try {
           launch = await configuredNativeLaunch(launch, {
@@ -336,6 +343,7 @@ export async function discoverLaunch({
         env: mergeEnvironment(parentEnv, launch.sourceEnv),
       };
     } catch (error) {
+      if (error.code === 'VENDOR_RUNTIME_VERIFICATION_REQUIRED') throw error;
       skipped.push({ version, reason: error.message });
     }
   }
@@ -401,7 +409,9 @@ export async function terminateOwnedChild(child, platform = process.platform) {
 }
 
 export async function runLauncher(launch) {
-  const child = spawn(launch.command, launch.args, {
+  requireVerifiedVendorMode(launch.mode);
+  const command = await verifyChildNode(launch.command);
+  const child = spawn(command, launch.args, {
     env: launch.env,
     stdio: ['pipe', 'pipe', 'inherit'],
     shell: false,
