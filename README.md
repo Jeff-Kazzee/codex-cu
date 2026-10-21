@@ -11,13 +11,17 @@ This is an independent project maintained by [Jeff Kazzee](https://github.com/Je
 - Windows with the Codex desktop app installed, running, and signed in.
 - An existing authorized native `node_repl` binding in the same Windows user and desktop session.
 - The app's installed `unified-computer-use` bundle.
-- Node.js 20 or later, available as `node` to your MCP client.
+- A patched supported Node.js release available as `node` to your MCP client. Use 24.22.1 by default. Node 22.23.4 or later on 22.x and 26.12.1 or later on 26.x are also supported until each line reaches end of life.
 - An MCP client that supports form elicitation for Windows app consent before input.
 - Browser support enabled in the Codex app for the browser you want to control.
 
 The launcher discovers the newest compatible installed manifest at startup. It uses the app's existing executables and session configuration. You do not need to copy tokens, runtime paths, or connection endpoints into this package.
 
 This package cannot supply a missing Codex runtime or establish a missing authorization binding. Successful MCP registration alone does not prove that another client can access the running desktop session. Test observation before requesting input. Runtime updates can change compatibility.
+
+The wrapper checks its own Node.js interpreter before discovery, diagnosis, or installation. Browser mode also verifies the actual bundled Node executable and security version with a bounded, sanitized Node probe before loading the vendor entry point. An unsafe or unverified interpreter stops diagnosis and launch.
+
+Windows native mode and the installer are currently held with `VENDOR_RUNTIME_VERIFICATION_REQUIRED`. This repository has no documented safe version-verification contract for `node_repl.exe`. Its name alone does not establish that it embeds Node or is affected by a Node vulnerability. Do not bypass the hold or guess version flags. Native acceptance requires vendor evidence and a reviewed verification contract. These floors follow the [October 21, 2026 Node.js security releases](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases). Installed Codex app and computer-use interpreters are separate vendor-managed dependencies. This package does not update them or certify their security version. Update them through the official vendor release path. Client registrations created by the installer retain an absolute Node executable path. After selecting a patched Node executable, rerun the reviewed installer to refresh those registrations.
 
 ## Install in Claude Code
 
@@ -123,7 +127,9 @@ An unavailable binding, missing bundle, locked desktop, or unsupported browser r
 
 ## Development and support
 
-Run `npm test` in this directory for package checks. Run `claude plugin validate --strict --json .` for Claude's manifest validation. Test both modes through your actual MCP client to verify session compatibility.
+CI first verifies the hosted action interpreter, then stops with `CI_UNVERIFIED_BOOTSTRAP` before checkout or setup. The reviewed `setup-node` action starts npm and Yarn clients even when caching is disabled. Their startup runtimes and the runtime download path still need a reviewed bootstrap. CI acceptance and package checks remain pending. The workflow does not bypass either hold.
+
+Run `node --run test` in this directory for package checks. Run `claude plugin validate --strict --json .` for Claude's manifest validation. Test both modes through your actual MCP client to verify session compatibility.
 
 Read [the privacy notice](PRIVACY.md) before exposing app or browser content to an agent. Report redacted errors through [GitHub issues](https://github.com/Jeff-Kazzee/codex-cu/issues).
 

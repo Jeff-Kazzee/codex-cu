@@ -20,13 +20,17 @@ const packageFiles = [
   '.gitignore',
   '.github/workflows/ci.yml',
   'package.json',
+  '.node-version',
   'README.md',
   'PRIVACY.md',
   'COMPATIBILITY.md',
   'LICENSE',
   'scripts/codex-cu.mjs',
+  'scripts/check-node-version.mjs',
+  'scripts/check-child-node.mjs',
   'scripts/install-agents.mjs',
   'tests/package.test.mjs',
+  'tests/node-version.test.mjs',
   'tests/installer.test.mjs',
   ...skills.map((name) => `skills/${name}/SKILL.md`),
   'skills/codex-windows-computer-use/references/windows-interaction.md',
@@ -176,7 +180,8 @@ export async function installAgents({
   let launch;
   try {
     launch = await discover({ mode: 'windows', parentEnv: env });
-  } catch {
+  } catch (error) {
+    if (error.code === 'VENDOR_RUNTIME_VERIFICATION_REQUIRED') throw error;
     if (install) throw new Error('Codex Windows runtime discovery failed');
   }
   const cli = launch?.sourceEnv?.CODEX_CLI_PATH;

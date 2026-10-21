@@ -6,9 +6,9 @@
   "description": "Public Claude Code plugin and reusable skills for an installed Codex desktop computer-use runtime.",
   "license": "MIT",
   "engines": {
-    "node": ">=20"
+    "node": ">=22.23.4 <23 || >=24.22.1 <25 || >=26.12.1 <27"
   },
   "scripts": {
-    "test": "node --test tests/package.test.mjs tests/installer.test.mjs"
+    "test": "node scripts/check-node-version.mjs && node --test tests/package.test.mjs tests/installer.test.mjs tests/node-version.test.mjs"
   }
 }
